@@ -10,18 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "users")
 public class Customer implements Serializable {
 
 	private static final long serialVersionUID = -3009157732242241606L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private String sso_id;
 
-	@Column(name = "firstname")
+	@Column(name = "frst_nm")
 	private String firstName;
 
-	@Column(name = "lastname")
+	@Column(name = "last_nm")
 	private String lastName;
 
 	protected Customer() {
@@ -34,6 +33,6 @@ public class Customer implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id, firstName, lastName);
+		return String.format("Customer[id=%s, firstName='%s', lastName='%s']", sso_id, firstName, lastName);
 	}
 }

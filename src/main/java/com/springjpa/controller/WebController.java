@@ -40,7 +40,7 @@ public class WebController {
 	}
 	
 	@RequestMapping("/findbyid")
-	public String findById(@RequestParam("id") long id){
+	public String findById(@RequestParam("id") String id){
 		String result = "";
 		result = repository.findOne(id).toString();
 		return result;
