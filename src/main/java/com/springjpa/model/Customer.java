@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "users")
+@NamedEntityGraph(name = "roles", attributeNodes = {@NamedAttributeNode(value = "roles")})
 public class Customer implements Serializable {
 
 	private static final long serialVersionUID = -3009157732242241606L;

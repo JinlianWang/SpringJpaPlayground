@@ -11,5 +11,6 @@ import com.springjpa.model.Customer;
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, String>{
 	
+	@EntityGraph(value = "roles", type = EntityGraph.EntityGraphType.LOAD)
 	List<Customer> findByLastName(String lastName);
 }
