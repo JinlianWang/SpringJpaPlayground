@@ -42,7 +42,8 @@ public class WebController {
 	@RequestMapping("/findbyid")
 	public String findById(@RequestParam("id") String id){
 		String result = "";
-		result = repository.findOne(id).toString();
+		Customer one = repository.findOne(id);
+		result = one.getFirstName() + " " + one.getLastName();
 		return result;
 	}
 	
@@ -51,7 +52,7 @@ public class WebController {
 		String result = "";
 		
 		for(Customer cust: repository.findByLastName(lastName)){
-			result += cust.toString() + "<br>"; 
+			result += cust.getFirstName() + "<br>"; 
 		}
 		
 		return result;

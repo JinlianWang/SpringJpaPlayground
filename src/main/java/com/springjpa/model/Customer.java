@@ -5,9 +5,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -25,17 +28,25 @@ public class Customer implements Serializable {
 	@Column(name = "last_nm")
 	private String lastName;
 
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "sso_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
 
-	protected Customer() {
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public Customer(String firstName, String lastName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -45,6 +56,14 @@ public class Customer implements Serializable {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	
+	protected Customer() {
+	}
+
+	public Customer(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	@Override
