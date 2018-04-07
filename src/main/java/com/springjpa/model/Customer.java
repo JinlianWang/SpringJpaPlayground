@@ -1,13 +1,15 @@
 package com.springjpa.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +25,12 @@ public class Customer implements Serializable {
 	@Column(name = "last_nm")
 	private String lastName;
 
+	@ManyToMany
+	@JoinTable(name = "users_roles",
+    joinColumns = @JoinColumn(name = "sso_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
+
 	protected Customer() {
 	}
 
@@ -31,8 +39,16 @@ public class Customer implements Serializable {
 		this.lastName = lastName;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("Customer[id=%s, firstName='%s', lastName='%s']", sso_id, firstName, lastName);
+		return String.format("Customer[id=%s, firstName='%s', lastName='%s', roles='%s']", sso_id, firstName, lastName, this.getRoles());
 	}
 }
