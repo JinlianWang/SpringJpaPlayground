@@ -1,10 +1,12 @@
 package com.springjpa.service;
 
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
 import com.springjpa.model.db.RoleDbEntity;
 import com.springjpa.model.http.RoleResponse;
 
-public class RoleDb2ResponseConverter implements Converter<RoleDbEntity, RoleResponse>{
+@Component
+public class RoleDb2ResponseConverter extends ConversionServiceAwareConverter<RoleDbEntity, RoleResponse>{
 
 	@Override
 	public RoleResponse convert(RoleDbEntity source) {

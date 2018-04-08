@@ -25,13 +25,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(sessionInterceptor());
     }
 
-    @Override
-    public void addFormatters(FormatterRegistry formatterRegistry)
-    {
-        formatterRegistry.addConverter(getRoleConverter());
-        formatterRegistry.addConverter(getCustomerConverter());
-    }
-  
     @Bean
     public RoleDb2ResponseConverter getRoleConverter() {
     		return new RoleDb2ResponseConverter();
