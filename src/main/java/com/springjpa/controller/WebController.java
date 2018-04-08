@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
-import com.springjpa.model.Customer;
+import com.springjpa.model.db.CustomerDbEntity;
+import com.springjpa.model.http.CustomerResponse;
 import com.springjpa.repo.CustomerRepository;
 import com.springjpa.service.CustomerService;
 
@@ -26,11 +27,11 @@ public class WebController {
 	@MethodSessionValidationAnnotation
 	public String process(){
 		// save a single Customer
-		repository.save(new Customer("Jack", "Smith"));
+		repository.save(new CustomerDbEntity("Jack", "Smith"));
 		
 		// save a list of Customers
-		repository.save(Arrays.asList(new Customer("Adam", "Johnson"), new Customer("Kim", "Smith"),
-										new Customer("David", "Williams"), new Customer("Peter", "Davis")));
+		repository.save(Arrays.asList(new CustomerDbEntity("Adam", "Johnson"), new CustomerDbEntity("Kim", "Smith"),
+										new CustomerDbEntity("David", "Williams"), new CustomerDbEntity("Peter", "Davis")));
 		
 		return "Done";
 	}
@@ -41,7 +42,7 @@ public class WebController {
 	public String findAll(){
 		String result = "";
 		
-		for(Customer cust : repository.findAll()){
+		for(CustomerDbEntity cust : repository.findAll()){
 			result += cust.toString() + "<br>";
 		}
 		
@@ -50,7 +51,7 @@ public class WebController {
 	
 	@RequestMapping("/findbyid")
 	@MethodSessionValidationAnnotation
-	public Customer findById(@RequestParam("id") String id){
+	public CustomerResponse findById(@RequestParam("id") String id){
 		return customerService.locateCustomer(id);
 	}
 	
@@ -59,7 +60,7 @@ public class WebController {
 	public String fetchDataByLastName(@RequestParam("lastname") String lastName){
 		String result = "";
 		
-		for(Customer cust: repository.findByLastName(lastName)){
+		for(CustomerDbEntity cust: repository.findByLastName(lastName)){
 			result += cust.getFirstName() + "<br>"; 
 		}
 		

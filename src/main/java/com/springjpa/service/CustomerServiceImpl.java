@@ -3,9 +3,11 @@ package com.springjpa.service;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import com.springjpa.model.Customer;
+import com.springjpa.model.db.CustomerDbEntity;
+import com.springjpa.model.http.CustomerResponse;
 import com.springjpa.repo.CustomerRepository;
 
 @Service
@@ -14,11 +16,15 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	CustomerRepository repository;
 	
+	@Autowired
+    private ConversionService conversionService;
+	
 	@Override
 	@Transactional
-	public Customer locateCustomer(String id) {
-		Customer one = repository.findOne(id);
-		return one;
+	public CustomerResponse locateCustomer(String id) {
+		CustomerDbEntity one = repository.findOne(id);
+		CustomerResponse response = conversionService.convert(one, CustomerResponse.class);
+		return response;
 	}
 
 }

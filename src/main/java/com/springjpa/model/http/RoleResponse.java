@@ -1,32 +1,17 @@
-package com.springjpa.model;
+package com.springjpa.model.http;
 
-import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@Entity
-@Table(name = "roles")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Role implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7983141855304184538L;
-	
-	@Id
-	@Column(name="role_id")
+public class RoleResponse {
+
 	@XmlElement
 	private int roleId;
 	
-	@Column(name="nm")
 	@XmlElement
 	private String name;
 
@@ -46,6 +31,15 @@ public class Role implements Serializable {
 		this.name = name;
 	}	
 	
+	public RoleResponse() {
+		super();
+	}
+	
+	public RoleResponse(int roleId) {
+		super();
+		this.roleId = roleId;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Role[id=%s, name='%s']",this.roleId, this.name);

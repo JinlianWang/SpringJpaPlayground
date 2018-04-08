@@ -1,4 +1,4 @@
-package com.springjpa.model;
+package com.springjpa.model.db;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -12,29 +12,20 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "users")
 @NamedEntityGraph(name = "roles", attributeNodes = {@NamedAttributeNode(value = "roles")})
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Customer implements Serializable {
+public class CustomerDbEntity implements Serializable {
 
 	private static final long serialVersionUID = -3009157732242241606L;
 	@Id
-	@XmlElement
 	private String sso_id;
 
-	@XmlElement
 	@Column(name = "frst_nm")
 	private String firstName;
 
-	@XmlElement
 	@Column(name = "last_nm")
 	private String lastName;
 
@@ -42,8 +33,16 @@ public class Customer implements Serializable {
 	@JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "sso_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private Set<RoleDbEntity> roles;
 
+	public String getSso_id() {
+		return sso_id;
+	}
+
+	public void setSso_id(String sso_id) {
+		this.sso_id = sso_id;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -60,18 +59,18 @@ public class Customer implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public Set<Role> getRoles() {
+	public Set<RoleDbEntity> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<Role> roles) {
+	public void setRoles(Set<RoleDbEntity> roles) {
 		this.roles = roles;
 	}
 	
-	protected Customer() {
+	protected CustomerDbEntity() {
 	}
 
-	public Customer(String firstName, String lastName) {
+	public CustomerDbEntity(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}

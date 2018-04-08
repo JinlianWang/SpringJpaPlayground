@@ -1,7 +1,7 @@
 package com.springjpa.service;
 
-import com.springjpa.model.Customer;
+import com.springjpa.model.http.CustomerResponse;
 
 public interface CustomerService {
-	Customer locateCustomer(String id);
+	CustomerResponse locateCustomer(String id);
 }

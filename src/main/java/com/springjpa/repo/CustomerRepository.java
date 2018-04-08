@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.springjpa.model.Customer;
+import com.springjpa.model.db.CustomerDbEntity;
 
 @Repository
-public interface CustomerRepository extends CrudRepository<Customer, String>{
+public interface CustomerRepository extends CrudRepository<CustomerDbEntity, String>{
 	
 	@EntityGraph(value = "roles", type = EntityGraph.EntityGraphType.LOAD)
-	List<Customer> findByLastName(String lastName);
+	List<CustomerDbEntity> findByLastName(String lastName);
 }
