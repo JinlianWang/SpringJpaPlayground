@@ -29,21 +29,11 @@ public class Role implements Serializable {
 	@Column(name="nm")
 	@XmlElement
 	private String name;
-	
-	@ManyToMany(mappedBy="roles")
-	private Set<Customer> users;
 
 	public int getRoleId() {
 		return roleId;
 	}
 
-	public Set<Customer> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<Customer> users) {
-		this.users = users;
-	}
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
