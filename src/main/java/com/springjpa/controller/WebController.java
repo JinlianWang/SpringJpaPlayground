@@ -50,7 +50,7 @@ public class WebController {
 	
 	@RequestMapping("/findbyid")
 	@MethodSessionValidationAnnotation
-	public String findById(@RequestParam("id") String id){
+	public Customer findById(@RequestParam("id") String id){
 		return customerService.locateCustomer(id);
 	}
 	

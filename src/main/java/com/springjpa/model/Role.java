@@ -8,9 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 @Entity
 @Table(name = "roles")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Role implements Serializable {
 	/**
 	 * 
@@ -19,15 +23,17 @@ public class Role implements Serializable {
 	
 	@Id
 	@Column(name="role_id")
-	private String roleId;
+	@XmlElement
+	private int roleId;
 	
 	@Column(name="nm")
+	@XmlElement
 	private String name;
 	
 	@ManyToMany(mappedBy="roles")
 	private Set<Customer> users;
 
-	public String getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
@@ -38,8 +44,7 @@ public class Role implements Serializable {
 	public void setUsers(Set<Customer> users) {
 		this.users = users;
 	}
-
-	public void setRoleId(String roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
 

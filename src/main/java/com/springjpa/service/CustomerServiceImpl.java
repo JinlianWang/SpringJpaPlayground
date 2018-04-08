@@ -16,9 +16,9 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	@Transactional
-	public String locateCustomer(String id) {
+	public Customer locateCustomer(String id) {
 		Customer one = repository.findOne(id);
-		return one.getFirstName() + " " + one.getLastName();
+		return one;
 	}
 
 }

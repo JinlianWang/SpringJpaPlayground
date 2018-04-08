@@ -12,20 +12,29 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "users")
 @NamedEntityGraph(name = "roles", attributeNodes = {@NamedAttributeNode(value = "roles")})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Customer implements Serializable {
 
 	private static final long serialVersionUID = -3009157732242241606L;
 	@Id
+	@XmlElement
 	private String sso_id;
 
+	@XmlElement
 	@Column(name = "frst_nm")
 	private String firstName;
 
+	@XmlElement
 	@Column(name = "last_nm")
 	private String lastName;
 
