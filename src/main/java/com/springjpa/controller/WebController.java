@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.Customer;
 import com.springjpa.repo.CustomerRepository;
+import com.springjpa.service.CustomerService;
 
 @RestController
 public class WebController {
+
 	@Autowired
 	CustomerRepository repository;
+	
+	@Autowired
+	CustomerService customerService;
 	
 	@RequestMapping("/save")
 	@MethodSessionValidationAnnotation
@@ -46,10 +51,7 @@ public class WebController {
 	@RequestMapping("/findbyid")
 	@MethodSessionValidationAnnotation
 	public String findById(@RequestParam("id") String id){
-		String result = "";
-		Customer one = repository.findOne(id);
-		result = one.getFirstName() + " " + one.getLastName();
-		return result;
+		return customerService.locateCustomer(id);
 	}
 	
 	@RequestMapping("/findbylastname")
