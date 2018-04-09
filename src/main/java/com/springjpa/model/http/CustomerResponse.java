@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="customer")
@@ -21,7 +22,8 @@ public class CustomerResponse {
 	private String lastName;
 
 	@XmlElement
-	private Set<RoleResponse> roles;
+	@XmlElementWrapper(name="roles")
+	private Set<RoleResponse> role;
 
 	public String getFirstName() {
 		return firstName;
@@ -40,11 +42,11 @@ public class CustomerResponse {
 	}
 
 	public Set<RoleResponse> getRoles() {
-		return roles;
+		return role;
 	}
 
 	public void setRoles(Set<RoleResponse> roles) {
-		this.roles = roles;
+		this.role = roles;
 	}
 	
 	protected CustomerResponse() {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.springjpa.model.db.CustomerDbEntity;
 
 @Repository
-public interface CustomerRepository extends CrudRepository<CustomerDbEntity, String>{
+public interface CustomerRepository extends CrudRepository<CustomerDbEntity, String>, PermissionRetrieval {
 	
 	@EntityGraph(value = "roles", type = EntityGraph.EntityGraphType.LOAD)
 	List<CustomerDbEntity> findByLastName(String lastName);

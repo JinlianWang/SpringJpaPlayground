@@ -11,6 +11,7 @@ public class RoleDb2ResponseConverter extends ConversionServiceAwareConverter<Ro
 	@Override
 	public RoleResponse convert(RoleDbEntity source) {
 		RoleResponse response = new RoleResponse(source.getRoleId());
+		response.setPermission(source.getPermission());
 		response.setName(source.getName());
 		return response;
 	}

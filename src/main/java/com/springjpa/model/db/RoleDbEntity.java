@@ -1,11 +1,13 @@
 package com.springjpa.model.db;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "roles")
@@ -21,6 +23,17 @@ public class RoleDbEntity implements Serializable {
 	
 	@Column(name="nm")
 	private String name;
+	
+	@Transient
+	private List<String> permission;
+
+	public List<String> getPermission() {
+		return permission;
+	}
+
+	public void setPermission(List<String> permission) {
+		this.permission = permission;
+	}
 
 	public int getRoleId() {
 		return roleId;

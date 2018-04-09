@@ -6,6 +6,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import com.springjpa.model.db.CustomerDbEntity;
+import com.springjpa.model.db.RoleDbEntity;
 import com.springjpa.model.http.CustomerResponse;
 import com.springjpa.repo.CustomerRepository;
 
@@ -22,6 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	public CustomerResponse locateCustomer(String id) {
 		CustomerDbEntity one = repository.findOne(id);
+		for(RoleDbEntity role: one.getRoles()) {
+			role.setPermission(repository.retrievePermissions(role.getRoleId()));
+		}
 		CustomerResponse response = conversionService.convert(one, CustomerResponse.class);
 		return response;
 	}
