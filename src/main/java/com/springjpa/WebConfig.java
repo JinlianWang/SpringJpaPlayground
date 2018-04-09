@@ -7,9 +7,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.springjpa.converter.CustomerDb2ReponseConverter;
+import com.springjpa.converter.RoleDb2ResponseConverter;
 import com.springjpa.interceptor.SessionValidationInterceptorAdapter;
-import com.springjpa.service.CustomerDb2ReponseConverter;
-import com.springjpa.service.RoleDb2ResponseConverter;
 
 @EnableWebMvc
 @Configuration

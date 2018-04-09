@@ -1,4 +1,4 @@
-package com.springjpa.service;
+package com.springjpa.converter;
 
 import javax.annotation.PostConstruct;
 
