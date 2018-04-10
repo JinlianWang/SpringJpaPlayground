@@ -49,9 +49,15 @@ public class WebController {
 		return result;
 	}
 	
-	@RequestMapping("/findbyid")
+	@RequestMapping(value = "/findbyid", produces="application/json")
 	@MethodSessionValidationAnnotation
 	public CustomerResponse findById(@RequestParam("id") String id){
+		return customerService.locateCustomer(id);
+	}
+	
+	@RequestMapping(value = "/findbyid") //default: can return xml if accept header not provided. 
+	@MethodSessionValidationAnnotation
+	public CustomerResponse findByIdDefault(@RequestParam("id") String id){
 		return customerService.locateCustomer(id);
 	}
 	
