@@ -4,13 +4,17 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.db.CustomerDbEntity;
-import com.springjpa.model.http.CustomerResponse;
+import com.springjpa.model.http.NotFoundException;
 import com.springjpa.repo.CustomerRepository;
 import com.springjpa.service.CustomerService;
 
@@ -51,14 +55,23 @@ public class WebController {
 	
 	@RequestMapping(value = "/findbyid", produces="application/json")
 	@MethodSessionValidationAnnotation
-	public CustomerResponse findById(@RequestParam("id") String id){
-		return customerService.locateCustomer(id);
+	@ResponseBody 
+	public ResponseEntity<Object> findById(@RequestParam("id") String id) throws NotFoundException{
+		if (StringUtils.isEmpty(id)) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} else {
+			try {
+				return new ResponseEntity<>(customerService.locateCustomer(id), HttpStatus.OK);
+			} catch (Exception e) {
+				 throw new NotFoundException();
+			}
+		}
 	}
 	
 	@RequestMapping(value = "/findbyid") //default: can return xml if accept header not provided. 
 	@MethodSessionValidationAnnotation
-	public CustomerResponse findByIdDefault(@RequestParam("id") String id){
-		return customerService.locateCustomer(id);
+	public ResponseEntity<Object> findByIdDefault(@RequestParam("id") String id){
+		return new ResponseEntity<>(customerService.locateCustomer(id), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/findbylastname")
