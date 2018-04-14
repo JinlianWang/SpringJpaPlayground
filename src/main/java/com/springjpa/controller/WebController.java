@@ -3,6 +3,8 @@ package com.springjpa.controller;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import com.springjpa.service.CustomerService;
 @RestController
 public class WebController {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+			
 	@Autowired
 	CustomerRepository repository;
 	
@@ -57,12 +61,16 @@ public class WebController {
 	@MethodSessionValidationAnnotation
 	@ResponseBody 
 	public ResponseEntity<Object> findById(@RequestParam("id") String id) throws NotFoundException{
+		logger.debug("Calling findById: " + id);
 		if (StringUtils.isEmpty(id)) {
+			logger.error("Error while calling findById: " + id);
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		} else {
 			try {
+				logger.info("FindById called successfully: " + id);
 				return new ResponseEntity<>(customerService.locateCustomer(id), HttpStatus.OK);
 			} catch (Exception e) {
+				 logger.error("Error while calling findById: " + id);
 				 throw new NotFoundException();
 			}
 		}
@@ -71,6 +79,7 @@ public class WebController {
 	@RequestMapping(value = "/findbyid") //default: can return xml if accept header not provided. 
 	@MethodSessionValidationAnnotation
 	public ResponseEntity<Object> findByIdDefault(@RequestParam("id") String id){
+		logger.info("findById: " + id);
 		return new ResponseEntity<>(customerService.locateCustomer(id), HttpStatus.OK);
 	}
 	

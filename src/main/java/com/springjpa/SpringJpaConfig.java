@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement 
 @EnableJpaRepositories(basePackages = "com.springjpa.repo")
-@PropertySource("classpath:jpa.properties")
 public class SpringJpaConfig {
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "org.postgresql.Driver";
     private static final String PROPERTY_NAME_DATABASE_PASSWORD = "postgresql.password";

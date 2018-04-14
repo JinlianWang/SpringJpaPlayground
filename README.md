@@ -3,7 +3,7 @@
 To run the application, use
 
 ```
-mvnDebug clean install package spring-boot:run -DskipTests -Dpostgresql.url=jdbc:postgresql://localhost:5432/app -Dpostgresql.username=app_usr
+mvnDebug clean install package spring-boot:run -DskipTests -Dpostgresql.url=jdbc:postgresql://localhost:5432/app -Dpostgresql.username=app_usr -Dspring.profiles.active=dev
 
 ```
 
@@ -12,3 +12,4 @@ mvnDebug clean install package spring-boot:run -DskipTests -Dpostgresql.url=jdbc
 * http://localhost:8080/findbyid?id=userId
 
 * http://localhost:8080/findall
+
