@@ -1,4 +1,7 @@
-[Initial Source/Article](http://javasampleapproach.com/spring-framework/use-spring-jpa-postgresql-spring-boot)
+Sources
+
+* [How to use Spring JPA with PostgreSQL | Spring Boot](http://javasampleapproach.com/spring-framework/use-spring-jpa-postgresql-spring-boot)
+* [Uploading files to AWS S3 Bucket using Spring Boot](https://medium.com/oril/uploading-files-to-aws-s3-bucket-using-spring-boot-483fcb6f8646)
 
 To run the application, use
 
