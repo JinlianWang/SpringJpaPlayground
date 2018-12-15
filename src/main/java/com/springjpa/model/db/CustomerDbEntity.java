@@ -2,7 +2,9 @@ package com.springjpa.model.db;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +31,7 @@ public class CustomerDbEntity implements Serializable {
 	@Column(name = "last_nm")
 	private String lastName;
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "sso_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -70,13 +72,14 @@ public class CustomerDbEntity implements Serializable {
 	protected CustomerDbEntity() {
 	}
 
-	public CustomerDbEntity(String firstName, String lastName) {
+	public CustomerDbEntity(String sso, String firstName, String lastName) {
+		this.sso_id = sso;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("Customer[id=%s, firstName='%s', lastName='%s', roles='%s']", sso_id, firstName, lastName, this.getRoles());
+		return String.format("Customer[id=%s, firstName='%s', lastName='%s', roles='%s']", sso_id, firstName, lastName, this.getRoles().toString());
 	}
 }

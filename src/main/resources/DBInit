@@ -1,0 +1,36 @@
+-- auto-generated definition
+create table roles
+(
+  role_id integer not null
+    constraint roles_pkey
+      primary key,
+  nm      varchar(10)
+);
+
+alter table roles
+  owner to "Welcome9";
+
+create table users
+(
+  frst_nm varchar(10),
+  last_nm varchar(10),
+  sso_id  varchar(40) not null
+    constraint users_pkey1
+      primary key
+);
+
+alter table users
+  owner to "Welcome9";
+
+create table users_roles
+(
+  sso_id  varchar(40)
+    constraint users_roles_users_sso_id_fk
+      references users,
+  role_id integer
+    constraint users_roles_roles_role_id_fk
+      references roles
+);
+
+alter table users_roles
+  owner to "Welcome9";

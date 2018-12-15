@@ -1,6 +1,8 @@
 package com.springjpa.controller;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -10,14 +12,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.db.CustomerDbEntity;
+import com.springjpa.model.db.RoleDbEntity;
+import com.springjpa.model.http.AddRoleRequest;
 import com.springjpa.model.http.NotFoundException;
 import com.springjpa.repo.CustomerRepository;
+import com.springjpa.repo.RoleRepository;
 import com.springjpa.service.CustomerService;
 
 @RestController
@@ -29,22 +37,52 @@ public class WebController {
 	CustomerRepository repository;
 	
 	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
 	CustomerService customerService;
 	
-	@RequestMapping("/save")
+	@RequestMapping("/initRoles")
 	@MethodSessionValidationAnnotation
-	public String process(){
-		// save a single Customer
-		repository.save(new CustomerDbEntity("Jack", "Smith"));
+	public ResponseEntity<Object> initRoles(){
+		// save multiple Customer
+		List<RoleDbEntity> result = new ArrayList<RoleDbEntity>();
+		RoleDbEntity adminRole = new RoleDbEntity(1, "admin");
+		result.add(adminRole);
+		RoleDbEntity userRole = new RoleDbEntity(2, "cardholder"); 
+		result.add(userRole);
 		
-		// save a list of Customers
-		repository.save(Arrays.asList(new CustomerDbEntity("Adam", "Johnson"), new CustomerDbEntity("Kim", "Smith"),
-										new CustomerDbEntity("David", "Williams"), new CustomerDbEntity("Peter", "Davis")));
-		
-		return "Done";
+		roleRepository.save(result);
+		return new ResponseEntity<>("Roles Initialized Successfully!", HttpStatus.OK);
 	}
 	
+	@RequestMapping("/initUsers")
+	@MethodSessionValidationAnnotation
+	public ResponseEntity<Object> initUsers(){
+		// save a single Customer
+		CustomerDbEntity customerEntity = new CustomerDbEntity("2", "Jack", "Smith");
+		RoleDbEntity roleEntity = roleRepository.findOne(2);
+		customerEntity.setRoles(Collections.singleton(roleEntity));
+		repository.save(customerEntity);
+		
+		customerEntity = new CustomerDbEntity("1", "Sunny", "Wang");
+		repository.save(customerEntity);
+		return new ResponseEntity<>("User Initialized Successfully!", HttpStatus.OK);
+	}
+
 	
+	@RequestMapping(value="/users/{userId}/roles", method = RequestMethod.POST)
+	@MethodSessionValidationAnnotation
+	public ResponseEntity<Object> addRole(@PathVariable("userId") String userId, @RequestBody AddRoleRequest addRoleRequest){
+		CustomerDbEntity customerEntity = repository.findOne(userId);
+		RoleDbEntity roleEntity = roleRepository.findOne(addRoleRequest.getRoleId());
+		customerEntity.getRoles().add(roleEntity);
+		repository.save(customerEntity);
+		
+		return new ResponseEntity<>(customerEntity.getSso_id(), HttpStatus.CREATED);
+	}
+	
+
 	@RequestMapping("/findall")
 	@MethodSessionValidationAnnotation
 	public String findAll(){
