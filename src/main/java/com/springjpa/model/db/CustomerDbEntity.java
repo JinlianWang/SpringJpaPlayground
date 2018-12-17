@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -31,11 +32,15 @@ public class CustomerDbEntity implements Serializable {
 	@Column(name = "last_nm")
 	private String lastName;
 
-	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
 	@JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "sso_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleDbEntity> roles;
+	
+	@OneToMany(mappedBy="customer", fetch=FetchType.LAZY)
+	private Set<OrderDbEntity> orders;
+	
 
 	public String getSso_id() {
 		return sso_id;

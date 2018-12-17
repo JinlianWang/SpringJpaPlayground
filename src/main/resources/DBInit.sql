@@ -90,3 +90,23 @@ INSERT INTO public.roles_prmsns (perm_id, role_id) VALUES (1, 1);
 INSERT INTO public.roles_prmsns (perm_id, role_id) VALUES (2, 1);
 INSERT INTO public.roles_prmsns (perm_id, role_id) VALUES (3, 1);
 INSERT INTO public.roles_prmsns (perm_id, role_id) VALUES (4, 2);
+
+-- transactions table generation 
+
+create table transactions
+(
+  id      varchar(40) not null
+    constraint transactions_pk
+      primary key,
+  user_id varchar(20),
+  amount  double precision,
+  details jsonb
+);
+
+alter table transactions
+  owner to "Welcome9";
+
+create unique index transactions_id_uindex
+  on transactions (id);
+
+

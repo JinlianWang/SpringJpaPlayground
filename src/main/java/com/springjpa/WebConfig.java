@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.springjpa.converter.CustomerDb2ReponseConverter;
+import com.springjpa.converter.Order2OrderDbEntityConverter;
+import com.springjpa.converter.OrderDbEntity2OrderConverter;
 import com.springjpa.converter.RoleDb2ResponseConverter;
 import com.springjpa.interceptor.SessionValidationInterceptorAdapter;
 
@@ -35,4 +37,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     		return new CustomerDb2ReponseConverter();
     }
     
+    @Bean
+    public OrderDbEntity2OrderConverter getOrderConverter() {
+    		return new OrderDbEntity2OrderConverter();
+    }
+    
+    @Bean
+    public Order2OrderDbEntityConverter getOrderDbConverter() {
+    	return new Order2OrderDbEntityConverter();
+    }
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -20,11 +21,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
+import com.springjpa.model.core.Order;
 import com.springjpa.model.db.CustomerDbEntity;
+import com.springjpa.model.db.OrderDbEntity;
 import com.springjpa.model.db.RoleDbEntity;
 import com.springjpa.model.http.AddRoleRequest;
 import com.springjpa.model.http.NotFoundException;
+import com.springjpa.model.http.PurchaseOrderRequest;
 import com.springjpa.repo.CustomerRepository;
+import com.springjpa.repo.OrderRepository;
 import com.springjpa.repo.RoleRepository;
 import com.springjpa.service.CustomerService;
 
@@ -38,6 +43,12 @@ public class WebController {
 	
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	OrderRepository orderRepository;
+	
+	@Autowired
+	ConversionService converionService;
 	
 	@Autowired
 	CustomerService customerService;
@@ -134,6 +145,14 @@ public class WebController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/users/{userId}/orders", method = RequestMethod.POST, produces="application/json")
+	@MethodSessionValidationAnnotation
+	public ResponseEntity<Object> purchase(@PathVariable("userId") String userId, @RequestBody Order purchaseOrderRequest){
+		Order order = customerService.makePurchase(userId, purchaseOrderRequest);
+		return new ResponseEntity<>(order, HttpStatus.CREATED);
+	}
+	
 	
 	@RequestMapping("/login")
 	public String authenticate(@RequestParam("username") String username, @RequestParam("password") String password) {
