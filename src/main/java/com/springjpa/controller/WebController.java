@@ -95,7 +95,9 @@ public class WebController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/findbyid", produces="application/json")
+	@RequestMapping(value = "/findbyid", produces="application/json") 
+	//if accept:application/json is provided as a header, this entry will be called; 
+	//otherwise, the default method defined after this method will be called.  
 	@MethodSessionValidationAnnotation
 	@ResponseBody 
 	public ResponseEntity<Object> findById(@RequestParam("id") String id) throws NotFoundException{
