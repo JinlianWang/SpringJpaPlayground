@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.env.Environment;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,19 +30,27 @@ public class SpringJpaConfig {
     private static final String PROPERTY_NAME_DATABASE_PASSWORD = "postgresql.password";
     private static final String PROPERTY_NAME_DATABASE_URL = "postgresql.url";
     private static final String PROPERTY_NAME_DATABASE_USERNAME = "postgresql.username";
+    private static final String PROPERTY_NAME_DATABASE_INITSIZE = "postgresql.initialSize";
+    private static final String PROPERTY_NAME_DATABASE_MINIDLE = "postgresql.minIdle";
+    private static final String PROPERTY_NAME_DATABASE_MAXIDLE = "postgresql.maxIdle";
+    private static final String PROPERTY_NAME_DATABASE_MAXTOTAL = "postgresql.maxTotal";
     
     @Autowired
     private Environment env;
     
     @Bean
     public DataSource datasource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        BasicDataSource dataSource = new BasicDataSource();
         
         dataSource.setDriverClassName(PROPERTY_NAME_DATABASE_DRIVER);
         dataSource.setUrl(env.getProperty(PROPERTY_NAME_DATABASE_URL));
         dataSource.setUsername(env.getProperty(PROPERTY_NAME_DATABASE_USERNAME));
         dataSource.setPassword(env.getProperty(PROPERTY_NAME_DATABASE_PASSWORD));
-         
+        dataSource.setInitialSize(env.getProperty(PROPERTY_NAME_DATABASE_INITSIZE, Integer.class));
+        dataSource.setMinIdle(env.getProperty(PROPERTY_NAME_DATABASE_MINIDLE, Integer.class));
+        dataSource.setMaxIdle(env.getProperty(PROPERTY_NAME_DATABASE_MAXIDLE, Integer.class));
+        dataSource.setMaxTotal(env.getProperty(PROPERTY_NAME_DATABASE_MAXTOTAL, Integer.class));
+
         return dataSource;
     }
 
@@ -49,7 +58,7 @@ public class SpringJpaConfig {
     public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.springjpa.model");
+        em.setPackagesToScan("com.springjpa.model.db");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaPropertyMap(hibernateProperties());
         em.afterPropertiesSet();
