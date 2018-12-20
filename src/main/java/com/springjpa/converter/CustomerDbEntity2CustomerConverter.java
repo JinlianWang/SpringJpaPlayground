@@ -12,7 +12,7 @@ import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.db.RoleDbEntity;
 
 @Component
-public class CustomerDb2ReponseConverter extends ConversionServiceAwareConverter<CustomerDbEntity, Customer>{
+public class CustomerDbEntity2CustomerConverter extends ConversionServiceAwareConverter<CustomerDbEntity, Customer>{
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	

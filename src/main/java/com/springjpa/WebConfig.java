@@ -7,10 +7,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.springjpa.converter.CustomerDb2ReponseConverter;
+import com.springjpa.converter.CustomerDbEntity2CustomerConverter;
 import com.springjpa.converter.Order2OrderDbEntityConverter;
 import com.springjpa.converter.OrderDbEntity2OrderConverter;
-import com.springjpa.converter.RoleDb2ResponseConverter;
+import com.springjpa.converter.RoleDbEntity2RoleConverter;
 import com.springjpa.interceptor.SessionValidationInterceptorAdapter;
 
 @EnableWebMvc
@@ -28,13 +28,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public RoleDb2ResponseConverter getRoleConverter() {
-    		return new RoleDb2ResponseConverter();
+    public RoleDbEntity2RoleConverter getRoleConverter() {
+    		return new RoleDbEntity2RoleConverter();
     }
     
     @Bean
-    public CustomerDb2ReponseConverter getCustomerConverter() {
-    		return new CustomerDb2ReponseConverter();
+    public CustomerDbEntity2CustomerConverter getCustomerConverter() {
+    		return new CustomerDbEntity2CustomerConverter();
     }
     
     @Bean

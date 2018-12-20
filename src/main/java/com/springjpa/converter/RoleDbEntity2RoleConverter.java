@@ -6,7 +6,7 @@ import com.springjpa.model.core.Role;
 import com.springjpa.model.db.RoleDbEntity;
 
 @Component
-public class RoleDb2ResponseConverter extends ConversionServiceAwareConverter<RoleDbEntity, Role>{
+public class RoleDbEntity2RoleConverter extends ConversionServiceAwareConverter<RoleDbEntity, Role>{
 
 	@Override
 	public Role convert(RoleDbEntity source) {
