@@ -1,4 +1,4 @@
-package com.springjpa.model.http;
+package com.springjpa.model.core;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="role")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RoleResponse {
+public class Role {
 
 	@XmlElement
 	private int roleId;
@@ -46,11 +46,11 @@ public class RoleResponse {
 		this.name = name;
 	}	
 	
-	public RoleResponse() {
+	public Role() {
 		super();
 	}
 	
-	public RoleResponse(int roleId) {
+	public Role(int roleId) {
 		super();
 		this.roleId = roleId;
 	}
