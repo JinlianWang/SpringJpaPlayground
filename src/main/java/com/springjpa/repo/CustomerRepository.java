@@ -13,4 +13,6 @@ public interface CustomerRepository extends CrudRepository<CustomerDbEntity, Str
 	
 	@EntityGraph(value = "roles", type = EntityGraph.EntityGraphType.LOAD)
 	List<CustomerDbEntity> findByLastName(String lastName);
+	
+	List<CustomerDbEntity> findByFirstName(String firstName);
 }

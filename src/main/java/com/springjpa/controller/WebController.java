@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
+import com.springjpa.model.core.Customer;
 import com.springjpa.model.core.Order;
 import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.db.OrderDbEntity;
@@ -136,14 +137,44 @@ public class WebController {
 	
 	@RequestMapping("/findbylastname")
 	@MethodSessionValidationAnnotation
-	public String fetchDataByLastName(@RequestParam("lastname") String lastName){
-		String result = "";
+	public ResponseEntity<List<Customer>> fetchDataByLastName(@RequestParam("lastname") String lastName){
+		List<Customer> customerList = new ArrayList<Customer>();
 		
-		for(CustomerDbEntity cust: repository.findByLastName(lastName)){
-			result += cust.getFirstName() + "<br>"; 
+		List<CustomerDbEntity> entityList = repository.findByLastName(lastName);
+		
+		if(entityList.size()==0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		return result;
+		logger.info("Found {} customers", entityList.size());
+		
+		for(CustomerDbEntity cust: entityList){
+			logger.info("Adding customer name: " + cust.getFirstName());
+			customerList.add(converionService.convert(cust, Customer.class));
+		}
+		
+		return new ResponseEntity<>(customerList, HttpStatus.OK);
+	}
+	
+	@RequestMapping("/findbyfirstname")
+	@MethodSessionValidationAnnotation
+	public ResponseEntity<List<Customer>> fetchDataByFirstName(@RequestParam("firstname") String firstName){
+		List<Customer> customerList = new ArrayList<Customer>();
+		
+		List<CustomerDbEntity> entityList = repository.findByFirstName(firstName);
+		
+		if(entityList.size()==0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		logger.info("Found {} customers", entityList.size());
+		
+		for(CustomerDbEntity cust: entityList){
+			logger.info("Adding customer name: " + cust.getFirstName());
+			customerList.add(converionService.convert(cust, Customer.class));
+		}
+		
+		return new ResponseEntity<>(customerList, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/users/{userId}/orders", method = RequestMethod.POST, produces="application/json")
