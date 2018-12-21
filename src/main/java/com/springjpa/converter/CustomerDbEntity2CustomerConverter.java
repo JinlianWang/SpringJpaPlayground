@@ -18,7 +18,7 @@ public class CustomerDbEntity2CustomerConverter extends ConversionServiceAwareCo
 	
 	@Override
 	public Customer convert(CustomerDbEntity source) {
-		Customer response = new Customer(source.getSso_id());
+		Customer response = new Customer(source.getId());
 		response.setFirstName(source.getFirstName());
 		response.setLastName(source.getLastName());
 

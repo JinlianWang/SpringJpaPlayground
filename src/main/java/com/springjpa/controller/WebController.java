@@ -91,7 +91,7 @@ public class WebController {
 		customerEntity.getRoles().add(roleEntity);
 		repository.save(customerEntity);
 		
-		return new ResponseEntity<>(customerEntity.getSso_id(), HttpStatus.CREATED);
+		return new ResponseEntity<>(customerEntity.getId(), HttpStatus.CREATED);
 	}
 	
 
@@ -182,6 +182,18 @@ public class WebController {
 	public ResponseEntity<Object> purchase(@PathVariable("userId") String userId, @RequestBody Order purchaseOrderRequest){
 		Order order = customerService.makePurchase(userId, purchaseOrderRequest);
 		return new ResponseEntity<>(order, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(value="/users/{userId}/orders", method = RequestMethod.GET, produces="application/json")
+	@MethodSessionValidationAnnotation
+	public ResponseEntity<Object> getOrders(@PathVariable("userId") String userId){
+		CustomerDbEntity customerEntity = repository.findById(userId);
+		List<Order> orders = new ArrayList<Order>();
+		customerEntity.getOrders().forEach((orderEntity)->{
+			Order order = converionService.convert(orderEntity, Order.class);
+			orders.add(order);
+		});
+		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 	
 	

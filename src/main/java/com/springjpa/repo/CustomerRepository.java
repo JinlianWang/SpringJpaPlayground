@@ -11,8 +11,11 @@ import com.springjpa.model.db.CustomerDbEntity;
 @Repository
 public interface CustomerRepository extends CrudRepository<CustomerDbEntity, String>, PermissionRetrieval {
 	
-	@EntityGraph(value = "roles", type = EntityGraph.EntityGraphType.LOAD)
+	@EntityGraph(value = "customer.Roles", type = EntityGraph.EntityGraphType.LOAD)
 	List<CustomerDbEntity> findByLastName(String lastName);
 	
 	List<CustomerDbEntity> findByFirstName(String firstName);
+	
+	@EntityGraph(value = "customer.Orders", type = EntityGraph.EntityGraphType.LOAD)
+	CustomerDbEntity findById(String Id);
 }
