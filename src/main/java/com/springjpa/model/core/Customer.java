@@ -8,8 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @XmlRootElement(name="customer")
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonInclude(Include.NON_NULL) //To exclude any value that is null
 public class Customer {
 
 	@XmlElement
@@ -24,6 +28,16 @@ public class Customer {
 	@XmlElement
 	@XmlElementWrapper(name="roles")
 	private Set<Role> role;
+	
+	private GitHubUserInfo gitHubInfo;
+
+	public GitHubUserInfo getGitHubInfo() {
+		return gitHubInfo;
+	}
+
+	public void setGitHubInfo(GitHubUserInfo gitHubInfo) {
+		this.gitHubInfo = gitHubInfo;
+	}
 
 	public String getFirstName() {
 		return firstName;

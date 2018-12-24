@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.core.Customer;
+import com.springjpa.model.core.GitHubUserInfo;
 import com.springjpa.model.core.Order;
 import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.db.RoleDbEntity;
@@ -32,6 +34,7 @@ import com.springjpa.repo.CustomerRepository;
 import com.springjpa.repo.OrderRepository;
 import com.springjpa.repo.RoleRepository;
 import com.springjpa.service.CustomerService;
+import com.springjpa.service.GitHubLookupService;
 
 @RestController
 public class WebController {
@@ -52,6 +55,9 @@ public class WebController {
 	
 	@Autowired
 	CustomerService customerService;
+	
+	@Autowired
+	GitHubLookupService gitHubLookupService; 
 	
 	@RequestMapping("/initRoles")
 	@MethodSessionValidationAnnotation
@@ -142,14 +148,30 @@ public class WebController {
 		
 		
 		List<Customer> customerList = new ArrayList<Customer>();
+		List<CompletableFuture<GitHubUserInfo>> futureList = new ArrayList<CompletableFuture<GitHubUserInfo>>();
 		
 		logger.info("Found {} customers", entityList.size());
 		
 		for(CustomerDbEntity cust: entityList){
-			logger.info("Adding customer name: " + cust.getFirstName());
-			customerList.add(converionService.convert(cust, Customer.class));
+			logger.info("Adding customer: " + cust.getFirstName() + cust.getLastName());
+			Customer customer = converionService.convert(cust, Customer.class);
+			customerList.add(customer);
+			
+			//Has to wait for all calls to finish before return to avoid that all GitHub user infos are retrived and returned. 
+			if(getUsersRequest.isEnhancedWithGithub()) {
+				try {
+					futureList.add(gitHubLookupService.findUser(customer));
+				} catch (InterruptedException e) {
+					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
 		}
 		
+		if(getUsersRequest.isEnhancedWithGithub()) {
+			// Wait until all calls are all done
+			CompletableFuture.allOf(futureList.toArray(new CompletableFuture[futureList.size()])).join();
+		}
+
 		return new ResponseEntity<>(customerList, HttpStatus.OK);
 	}
 	

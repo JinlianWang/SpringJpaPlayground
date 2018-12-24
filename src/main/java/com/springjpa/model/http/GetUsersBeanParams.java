@@ -7,6 +7,8 @@ public class GetUsersBeanParams {
 	private String lastName;
 	
 	private String[] Ids;
+	
+	private boolean enhancedWithGithub;
 
 	public String getFirstName() {
 		return firstName;
@@ -30,6 +32,14 @@ public class GetUsersBeanParams {
 
 	public void setIds(String[] ids) {
 		Ids = ids;
+	}
+
+	public boolean isEnhancedWithGithub() {
+		return enhancedWithGithub;
+	}
+
+	public void setEnhancedWithGithub(boolean enhancedWithGithub) {
+		this.enhancedWithGithub = enhancedWithGithub;
 	}
 	
 	
