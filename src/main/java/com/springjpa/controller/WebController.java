@@ -24,11 +24,10 @@ import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.core.Customer;
 import com.springjpa.model.core.Order;
 import com.springjpa.model.db.CustomerDbEntity;
-import com.springjpa.model.db.OrderDbEntity;
 import com.springjpa.model.db.RoleDbEntity;
 import com.springjpa.model.http.AddRoleRequest;
+import com.springjpa.model.http.GetUsersBeanParams;
 import com.springjpa.model.http.NotFoundException;
-import com.springjpa.model.http.PurchaseOrderRequest;
 import com.springjpa.repo.CustomerRepository;
 import com.springjpa.repo.OrderRepository;
 import com.springjpa.repo.RoleRepository;
@@ -94,25 +93,12 @@ public class WebController {
 		return new ResponseEntity<>(customerEntity.getId(), HttpStatus.CREATED);
 	}
 	
-
-	@RequestMapping("/findall")
-	@MethodSessionValidationAnnotation
-	public String findAll(){
-		String result = "";
-		
-		for(CustomerDbEntity cust : repository.findAll()){
-			result += cust.toString() + "<br>";
-		}
-		
-		return result;
-	}
-	
-	@RequestMapping(value = "/findbyid", produces="application/json") 
+	@RequestMapping(value = "/users/{userId}", produces="application/json") 
 	//if accept:application/json is provided as a header, this entry will be called; 
 	//otherwise, the default method defined after this method will be called.  
 	@MethodSessionValidationAnnotation
 	@ResponseBody 
-	public ResponseEntity<Object> findById(@RequestParam("id") String id) throws NotFoundException{
+	public ResponseEntity<Object> findById(@PathVariable("userId") String id) throws NotFoundException{
 		logger.debug("Calling findById: " + id);
 		if (StringUtils.isEmpty(id)) {
 			logger.error("Error while calling findById: " + id);
@@ -128,44 +114,34 @@ public class WebController {
 		}
 	}
 	
-	@RequestMapping(value = "/findbyid") //default: can return xml if accept header not provided. 
+	@RequestMapping(value = "/users/{userId}") //default: can return xml if accept header not provided. 
 	@MethodSessionValidationAnnotation
-	public ResponseEntity<Object> findByIdDefault(@RequestParam("id") String id){
+	public ResponseEntity<Object> findByIdDefault(@PathVariable("userId") String id){
 		logger.info("findById: " + id);
 		return new ResponseEntity<>(customerService.locateCustomer(id), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/findbylastname")
-	@MethodSessionValidationAnnotation
-	public ResponseEntity<List<Customer>> fetchDataByLastName(@RequestParam("lastname") String lastName){
-		List<Customer> customerList = new ArrayList<Customer>();
-		
-		List<CustomerDbEntity> entityList = repository.findByLastName(lastName);
-		
-		if(entityList.size()==0) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		logger.info("Found {} customers", entityList.size());
-		
-		for(CustomerDbEntity cust: entityList){
-			logger.info("Adding customer name: " + cust.getFirstName());
-			customerList.add(converionService.convert(cust, Customer.class));
-		}
-		
-		return new ResponseEntity<>(customerList, HttpStatus.OK);
-	}
 	
-	@RequestMapping("/findbyfirstname")
+	@RequestMapping("/users")
 	@MethodSessionValidationAnnotation
-	public ResponseEntity<List<Customer>> fetchDataByFirstName(@RequestParam("firstname") String firstName){
-		List<Customer> customerList = new ArrayList<Customer>();
-		
-		List<CustomerDbEntity> entityList = repository.findByFirstName(firstName);
-		
+	public ResponseEntity<List<Customer>> fetchUsersByLastName(GetUsersBeanParams getUsersRequest){
+		List<CustomerDbEntity> entityList = null;
+		if(getUsersRequest.getIds() != null) {
+			entityList = repository.findByIdIn(getUsersRequest.getIds());
+		} else if(getUsersRequest.getLastName() != null) {
+			entityList = repository.findByLastName(getUsersRequest.getLastName());
+		} else if(getUsersRequest.getFirstName() != null) {
+			entityList = repository.findByFirstName(getUsersRequest.getFirstName());
+		} else {
+			entityList = repository.findAll();
+		}
+
 		if(entityList.size()==0) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		
+		
+		List<Customer> customerList = new ArrayList<Customer>();
 		
 		logger.info("Found {} customers", entityList.size());
 		
