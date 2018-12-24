@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.springjpa.model.core.Customer;
 import com.springjpa.model.core.Order;
+import com.springjpa.model.db.AvatarDbEntity;
 import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.db.OrderDbEntity;
 import com.springjpa.model.db.RoleDbEntity;

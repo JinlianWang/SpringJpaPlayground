@@ -46,6 +46,9 @@ public class CustomerDbEntity implements Serializable {
 	@OneToMany(mappedBy="customer", fetch=FetchType.LAZY)
 	private Set<OrderDbEntity> orders;
 	
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name="user_id")
+	private Set<AvatarDbEntity> avatars;
 
 	public String getId() {
 		return id;
@@ -85,6 +88,15 @@ public class CustomerDbEntity implements Serializable {
 
 	public void setOrders(Set<OrderDbEntity> orders) {
 		this.orders = orders;
+	}
+
+	
+	public Set<AvatarDbEntity> getAvatars() {
+		return avatars;
+	}
+
+	public void setAvatars(Set<AvatarDbEntity> avatars) {
+		this.avatars = avatars;
 	}
 
 	protected CustomerDbEntity() {

@@ -1,8 +1,11 @@
 package com.springjpa.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.core.Customer;
@@ -27,12 +31,15 @@ import com.springjpa.model.core.GitHubUserInfo;
 import com.springjpa.model.core.Order;
 import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.db.RoleDbEntity;
+import com.springjpa.model.db.AvatarDbEntity;
 import com.springjpa.model.http.AddRoleRequest;
 import com.springjpa.model.http.GetUsersBeanParams;
 import com.springjpa.model.http.NotFoundException;
+import com.springjpa.model.http.UploadFilesResponse;
 import com.springjpa.repo.CustomerRepository;
 import com.springjpa.repo.OrderRepository;
 import com.springjpa.repo.RoleRepository;
+import com.springjpa.service.AmazonS3Service;
 import com.springjpa.service.CustomerService;
 import com.springjpa.service.GitHubLookupService;
 
@@ -58,6 +65,10 @@ public class WebController {
 	
 	@Autowired
 	GitHubLookupService gitHubLookupService; 
+	
+	@Autowired
+	private AmazonS3Service s3Service;
+	
 	
 	@RequestMapping("/initRoles")
 	@MethodSessionValidationAnnotation
@@ -194,6 +205,45 @@ public class WebController {
 		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="/users/{userId}/avatars", method = RequestMethod.POST)
+	@MethodSessionValidationAnnotation
+	//TO-DO: add field validation 
+    public ResponseEntity<UploadFilesResponse> uploadFile(@PathVariable("userId") String userId, @RequestParam("files") MultipartFile[] files) {
+		UploadFilesResponse filesResponse = new UploadFilesResponse();
+		Set<AvatarDbEntity> avatarsDbEntities = new HashSet<AvatarDbEntity>();
+		Arrays.stream(files).forEach(file->{
+			String fileName = this.s3Service.uploadFile(file);
+			avatarsDbEntities.add(new AvatarDbEntity(fileName));
+	        filesResponse.getFileNames().add(fileName);
+		});
+		
+		CustomerDbEntity customerEntity = repository.findOne(userId);
+		customerEntity.setAvatars(avatarsDbEntities);
+		repository.save(customerEntity);
+		
+		return new ResponseEntity<>(filesResponse, HttpStatus.OK); 
+    }
+
+	@RequestMapping(value="/users/{userId}/avatars/{avatarId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteFile(@PathVariable("userId") String userId, @PathVariable("avatarId") int avatarId) {
+		CustomerDbEntity customerEntity = repository.findOne(userId);
+	    
+		String fileName = null;
+		boolean deleted = false;
+		
+		for(AvatarDbEntity avatar:customerEntity.getAvatars()) {
+			if(avatar.getId() == avatarId) {
+				fileName = avatar.getFileName();
+				customerEntity.getAvatars().remove(avatar);
+				repository.save(customerEntity);
+				deleted = this.s3Service.deleteFileFromS3Bucket(fileName);
+				break;
+			}
+		}
+		
+        return  new ResponseEntity<>(deleted ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+    
 	
 	@RequestMapping("/login")
 	public String authenticate(@RequestParam("username") String username, @RequestParam("password") String password) {
