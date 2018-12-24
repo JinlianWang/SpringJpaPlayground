@@ -4,8 +4,10 @@ import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -25,6 +27,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+    private static final String PROPERTY_NAME_TASKEXECUTOR_COREPOOLSIZE = "taskExecutor.corePoolSize";
+    private static final String PROPERTY_NAME_TASKEXECUTOR_MAXPOOLSIZE = "taskExecutor.maxPoolSize";
+    private static final String PROPERTY_NAME_TASKEXECUTOR_QUEUECAPACITY = "taskExecutor.queueCapacity";
+    private static final String PROPERTY_NAME_TASKEXECUTOR_THREADNAMEPREFIX = "taskExecutor.threadNamePrefix";
+	
+    @Autowired
+    private Environment env;
+    
     @Bean
     SessionValidationInterceptorAdapter sessionInterceptor() {
          return new SessionValidationInterceptorAdapter();
@@ -58,10 +68,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(3);
-        executor.setMaxPoolSize(3);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("GithubLookup-");
+        executor.setCorePoolSize(env.getProperty(PROPERTY_NAME_TASKEXECUTOR_COREPOOLSIZE, Integer.class));
+        executor.setMaxPoolSize(env.getProperty(PROPERTY_NAME_TASKEXECUTOR_MAXPOOLSIZE, Integer.class));
+        executor.setQueueCapacity(env.getProperty(PROPERTY_NAME_TASKEXECUTOR_QUEUECAPACITY, Integer.class));
+        executor.setThreadNamePrefix(env.getProperty(PROPERTY_NAME_TASKEXECUTOR_THREADNAMEPREFIX, String.class));
         executor.initialize();
         logger.debug("TaskExecutor is initialized with core pool size:{} and max pool size:{}", executor.getCorePoolSize(), executor.getMaxPoolSize());
         return executor;
