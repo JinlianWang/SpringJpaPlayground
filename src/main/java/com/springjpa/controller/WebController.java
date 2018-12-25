@@ -9,21 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
 import com.springjpa.model.db.CustomerDbEntity;
 import com.springjpa.model.http.NotFoundException;
 import com.springjpa.repo.CustomerRepository;
 import com.springjpa.service.CustomerService;
-import com.springjpa.service.S3Services;
 
 @RestController
 public class WebController {
@@ -35,9 +30,6 @@ public class WebController {
 	
 	@Autowired
 	CustomerService customerService;
-	
-	@Autowired
-	S3Services s3Service;
 	
 	@RequestMapping("/save")
 	@MethodSessionValidationAnnotation
@@ -107,15 +99,5 @@ public class WebController {
 	public String authenticate(@RequestParam("username") String username, @RequestParam("password") String password) {
 		return UUID.randomUUID().toString();
 	}
-	
-    @PostMapping("/uploadFile")
-    public String uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        return this.s3Service.uploadFile(file);
-    }
-
-    @DeleteMapping("/deleteFile")
-    public String deleteFile(@RequestPart(value = "url") String file) {
-        return this.s3Service.deleteFile(file);
-    }
 }
 
