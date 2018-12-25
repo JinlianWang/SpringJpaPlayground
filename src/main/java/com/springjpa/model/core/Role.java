@@ -1,4 +1,4 @@
-package com.springjpa.model.http;
+package com.springjpa.model.core;
 
 import java.util.List;
 
@@ -8,9 +8,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+
 @XmlRootElement(name="role")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RoleResponse {
+@JsonInclude(Include.NON_NULL) //To exclude any value that is null
+public class Role {
 
 	@XmlElement
 	private int roleId;
@@ -46,11 +51,11 @@ public class RoleResponse {
 		this.name = name;
 	}	
 	
-	public RoleResponse() {
+	public Role() {
 		super();
 	}
 	
-	public RoleResponse(int roleId) {
+	public Role(int roleId) {
 		super();
 		this.roleId = roleId;
 	}

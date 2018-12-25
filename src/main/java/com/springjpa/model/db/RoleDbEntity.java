@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -12,12 +14,14 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "roles")
 public class RoleDbEntity implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7983141855304184538L;
 	
 	@Id
+	//@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	@Column(name="role_id")
 	private int roleId;
 	
@@ -50,6 +54,14 @@ public class RoleDbEntity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}	
+	
+	protected RoleDbEntity() {
+	}
+	
+	public RoleDbEntity(int roleId, String name) {
+		this.roleId = roleId;
+		this.name = name;
+	}
 	
 	@Override
 	public String toString() {

@@ -1,4 +1,4 @@
-package com.springjpa.model.http;
+package com.springjpa.model.core;
 
 
 import java.util.Set;
@@ -8,9 +8,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @XmlRootElement(name="customer")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CustomerResponse {
+@JsonInclude(Include.NON_NULL) //To exclude any value that is null
+public class Customer {
 
 	@XmlElement
 	private String sso_id;
@@ -23,7 +27,17 @@ public class CustomerResponse {
 
 	@XmlElement
 	@XmlElementWrapper(name="roles")
-	private Set<RoleResponse> role;
+	private Set<Role> role;
+	
+	private GitHubUserInfo gitHubInfo;
+
+	public GitHubUserInfo getGitHubInfo() {
+		return gitHubInfo;
+	}
+
+	public void setGitHubInfo(GitHubUserInfo gitHubInfo) {
+		this.gitHubInfo = gitHubInfo;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -41,18 +55,18 @@ public class CustomerResponse {
 		this.lastName = lastName;
 	}
 
-	public Set<RoleResponse> getRoles() {
+	public Set<Role> getRoles() {
 		return role;
 	}
 
-	public void setRoles(Set<RoleResponse> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.role = roles;
 	}
 	
-	protected CustomerResponse() {
+	protected Customer() {
 	}
 
-	public CustomerResponse(String sso_id) {
+	public Customer(String sso_id) {
 		this.sso_id = sso_id;
 	}
 	
