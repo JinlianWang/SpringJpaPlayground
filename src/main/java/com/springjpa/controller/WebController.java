@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springjpa.annotation.MethodSessionValidationAnnotation;
+import com.springjpa.aop.LogExecutionTime;
 import com.springjpa.model.core.Customer;
 import com.springjpa.model.core.GitHubUserInfo;
 import com.springjpa.model.core.Order;
@@ -141,6 +142,7 @@ public class WebController {
 	
 	@RequestMapping("/users")
 	@MethodSessionValidationAnnotation
+	@LogExecutionTime
 	public ResponseEntity<List<Customer>> fetchUsersByLastName(GetUsersBeanParams getUsersRequest){
 		List<CustomerDbEntity> entityList = null;
 		if(getUsersRequest.getIds() != null) {
