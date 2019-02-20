@@ -116,6 +116,7 @@ public class WebController {
 	//otherwise, the default method defined after this method will be called.  
 	@MethodSessionValidationAnnotation
 	@ResponseBody 
+	@LogExecutionTime
 	public ResponseEntity<Object> findById(@PathVariable("userId") String id) throws NotFoundException{
 		logger.debug("Calling findById: " + id);
 		if (StringUtils.isEmpty(id)) {

@@ -42,5 +42,8 @@ public class GetUsersBeanParams {
 		this.enhancedWithGithub = enhancedWithGithub;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format("GetUsersBeanParams[ids=%s, firstName='%s', lastName='%s']", Ids, firstName, lastName);
+	}
 }

@@ -5,6 +5,6 @@ import com.springjpa.model.core.Order;
 import com.springjpa.model.http.PurchaseOrderRequest;
 
 public interface CustomerService {
-	Customer locateCustomer(String id);
-	Order makePurchase(String userId, Order request);
+	public Customer locateCustomer(String id);
+	public Order makePurchase(String userId, Order request);
 }
