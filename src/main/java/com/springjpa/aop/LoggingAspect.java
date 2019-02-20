@@ -30,8 +30,43 @@ public class LoggingAspect {
     
     @Around("@annotation(LogExecutionTime)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-    	//print out all parameter names
+    	logger.info("Around JoinPoint: \n");
+    	logJoinPointInfo(joinPoint);
+    	
+    	//Print out execution time
+        final long start = System.currentTimeMillis();
+
+        final Object proceed = joinPoint.proceed();
+
+        final long executionTime = System.currentTimeMillis() - start;
+
+        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms! Spring AOP in action. ");
+
+        return proceed;
+    }
+    
+    @Before("controllerMethods()")
+    public void logBeforeMethodCall(JoinPoint jp) {
+    	logger.info("Before JoinPoint: \n");
+    	logJoinPointInfo(jp);
+    }
+    
+    @AfterReturning(value="customerServiceMethod()", returning="returnValue")
+    public void logReturnValue(JoinPoint jp, Object returnValue) throws Throwable {
+        logger.info("AfterReturn JoinPoint: \n");
+        logger.info("Method Name: " + jp.getSignature().getName());
+        //logJoinPointInfo(jp);//Somehow method parameters will be null in AfterReturnMethod
+        logger.info("Calling method with return value: {}",  returnValue);
+    }
+    
+    private void logJoinPointInfo(JoinPoint joinPoint) {
+    	
+    	//print out method name
+    	
     	MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        logger.info("Method name: " + methodSignature.getName());
+        
+    	//print out all parameter names
     	for(String param:methodSignature.getParameterNames()) {
     		logger.info("Parameter name: " + param);
     	}
@@ -49,27 +84,5 @@ public class LoggingAspect {
                 logger.info("Found PathVariable annotation with value: " + pathVariable.value());
             }
         }
-    	
-    	//Print out execution time
-        final long start = System.currentTimeMillis();
-
-        final Object proceed = joinPoint.proceed();
-
-        final long executionTime = System.currentTimeMillis() - start;
-
-        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms! Spring AOP in action. ");
-
-        return proceed;
-    }
-    
-    @Before("controllerMethods()")
-    public void logMethodCall(JoinPoint jp) {
-        String methodName = jp.getSignature().getName();
-        logger.info("Before calling method: " + methodName);
-    }
-    
-    @AfterReturning(value="customerServiceMethod()", returning="returnValue")
-    public void afterReturn(JoinPoint jp, Object returnValue) throws Throwable {
-        logger.info("Calling method with return value: {}",  returnValue);
     }
 }
